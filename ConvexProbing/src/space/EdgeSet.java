@@ -1,5 +1,6 @@
 package space;
 
-public class EdgeSet {
-	
+
+public class EdgeSet{
+	// test comment
 }
