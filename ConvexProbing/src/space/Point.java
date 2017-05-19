@@ -3,6 +3,10 @@ package space;
 import org.apache.commons.math3.fraction.Fraction;
 
 public class Point implements RealPoint{
+	
+	public Point(double[] point){
+		
+	}
 
 	/*
 	 * How many different axis there are in this space
@@ -26,7 +30,7 @@ public class Point implements RealPoint{
 	 * Returns the value of an axis
 	 * */
 	@Override
-	public Fraction getCoordinateValue() {
+	public Fraction getCoordinateValue(int axis) {
 		// TODO Auto-generated method stub
 		return null;
 	}
