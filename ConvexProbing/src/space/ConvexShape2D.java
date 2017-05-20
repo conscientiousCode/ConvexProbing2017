@@ -17,14 +17,15 @@ public class ConvexShape2D implements ConvexShape{
 	
 	
 	private Set<Point> vertices;
+	private EdgeSet edges;
 	
 	
 	public ConvexShape2D(int numOfVertices){
 		/*TO DO: IMPLEMENT CHECK TO ensure numOFVertices can be constructed given MINIMUM_POINT_DISTANCE*/
 		//Get Points on an ellipse and ensure that they are a sufficient distance away.
 		
-		selectPoints(numOfVertices);
-		makeEdgeSet(numOfVertices);
+		selectPoints(numOfVertices); // initializes vertices
+		makeEdgeSet(numOfVertices);  // initializes 
 		
 			
 	}
@@ -69,32 +70,45 @@ public class ConvexShape2D implements ConvexShape{
 	
 	protected void makeEdgeSet(int numOfVertices){
 				
-		java.util.ArrayList<Point>[] quadrants = new java.util.ArrayList[4];
+		java.util.ArrayList<Point>[] quadrantsList = new java.util.ArrayList[4];
 		for(int i = 0; i < 4; i++){
-			quadrants[i] = new java.util.ArrayList<Point>();
+			quadrantsList[i] = new java.util.ArrayList<Point>();
 		}
 		
 		for(Point point: vertices){
-			quadrants[quadrant(point)-1].add(point);
+			quadrantsList[quadrant(point)-1].add(point);
 		}
 		
 		/*Compares points where the point associated with pi = 0 is the lowest on the ellipse,
 		 * and 2*pi-epsilon is the lowest 
 		 * */
 		java.util.Comparator<Point> counterClockwiseOrientation = (Point p1, Point p2) -> {
-			int comparison = quadrant(p1) - quadrant(p2);
+			/*int comparison = quadrant(p1) - quadrant(p2);
 			if(comparison != 0){
 				return comparison;
-			}else if(p1.equals(p2)){
+			}else*/ if(p1.equals(p2)){
 				return 0;
 				
-				//I THINK THIS IS WRONG
 			}else if(quadrant(p1) == 1 || quadrant(p1) == 2){
-				return(p1.getCoordinateValue(0).doubleValue()-p2.getCoordinateValue(0).doubleValue() > 0)?(-1):(1);
+				return(p1.getCoordinateValue(0).doubleValue() > p2.getCoordinateValue(0).doubleValue())?(-1):(1);
 			}else{ // quadrant 3 or 4
-				return(p1.getCoordinateValue(0).doubleValue()-p2.getCoordinateValue(0).doubleValue() > 0)?(1):(-1);
+				return(p1.getCoordinateValue(0).doubleValue() > p2.getCoordinateValue(0).doubleValue())?(1):(-1);
 			}
 		};
+		
+		Point[][] quadrants = new Point[4][];
+		for(int i = 0; i < 4; i++){
+			quadrants[i] = quadrantsList[i].toArray(new Point[0]);
+			Arrays.sort(quadrants[i], counterClockwiseOrientation);
+		}
+		
+		Point[] orderedPoints = new Point[numOfVertices];
+		int index = 0;
+		for(int i = 0; i < 4; i++){
+			for(Point value: quadrants[i]){
+				orderedPoints[index++] =  value;
+			}
+		}
 		
 		
 		
