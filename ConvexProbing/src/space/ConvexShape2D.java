@@ -110,8 +110,12 @@ public class ConvexShape2D implements ConvexShape{
 			}
 		}
 		
-		
-		
+		if(orderedPoints.length >= 2){
+			edges.add(orderedPoints[0], orderedPoints[orderedPoints.length-1]);
+		}
+		for(int i = 1;i < orderedPoints.length; i++){
+			edges.add(orderedPoints[i-1], orderedPoints[i]);
+		}
 		
 	}
 	
@@ -140,20 +144,22 @@ public class ConvexShape2D implements ConvexShape{
 
 	@Override
 	public int getNumVertices() {
-		// TODO Auto-generated method stub
-		return 0;
+		return vertices.size();
 	}
 
 	@Override
 	public boolean hasVertex(Point point) {
-		// TODO Auto-generated method stub
+		for(Point p: vertices){
+			if(point.equals(p)){
+				return true;
+			}
+		}
 		return false;
 	}
 
 	@Override
 	public boolean hasEdgeBetween(Point p1, Point p2) {
-		// TODO Auto-generated method stub
-		return false;
+		return edges.contains(p1, p2);
 	}
 
 }
