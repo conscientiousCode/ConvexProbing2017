@@ -7,6 +7,9 @@ public class Point implements RealPoint{
 	Fraction[] vector;
 	
 	public Point(double[] point){
+		if(point == null){
+			throw new NullPointerException("It does not make sense to have a point without any dimension");
+		}
 		vector = new Fraction[point.length];
 		for(int i = 0; i < point.length; i++){
 			vector[i] = new Fraction(point[i]);
@@ -14,6 +17,9 @@ public class Point implements RealPoint{
 	}
 	
 	public Point(Fraction[] point){
+		if(point == null){
+			throw new NullPointerException("It does not make sense to have a point without any dimension");
+		}
 		vector = new Fraction[point.length];
 		for(int i = 0; i < point.length; i++){
 			vector[i] = new Fraction(point[i].getNumerator(), point[i].getDenominator());
@@ -38,7 +44,7 @@ public class Point implements RealPoint{
 			return false;
 		}
 		for(int i = 0; i < vector.length; i++){
-			if(vector[i].equals(otherPoint.getAxisValue(i))){
+			if(!vector[i].equals(otherPoint.getAxisValue(i))){
 				return false;
 			}
 		}

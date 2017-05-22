@@ -111,10 +111,10 @@ public class ConvexShape2D implements ConvexShape{
 		}
 		
 		if(orderedPoints.length >= 2){
-			edges.add(orderedPoints[0], orderedPoints[orderedPoints.length-1]);
+			edges.addEdge(orderedPoints[0], orderedPoints[orderedPoints.length-1]);
 		}
 		for(int i = 1;i < orderedPoints.length; i++){
-			edges.add(orderedPoints[i-1], orderedPoints[i]);
+			edges.addEdge(orderedPoints[i-1], orderedPoints[i]);
 		}
 		
 	}
@@ -159,7 +159,7 @@ public class ConvexShape2D implements ConvexShape{
 
 	@Override
 	public boolean hasEdgeBetween(Point p1, Point p2) {
-		return edges.contains(p1, p2);
+		return edges.containsEdge(p1, p2);
 	}
 
 }

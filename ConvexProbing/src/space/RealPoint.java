@@ -2,6 +2,10 @@ package space;
 
 import org.apache.commons.math3.fraction.Fraction;
 
+/**
+ * A real point is immutable
+ *
+ */
 public interface RealPoint {
 	public int getDimension();//Get the dimensions of the space that this point exists in.
 	public boolean equals(RealPoint otherPoint);
