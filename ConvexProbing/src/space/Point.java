@@ -4,17 +4,29 @@ import org.apache.commons.math3.fraction.Fraction;
 
 public class Point implements RealPoint{
 	
+	Fraction[] vector;
+	
 	public Point(double[] point){
-		
+		vector = new Fraction[point.length];
+		for(int i = 0; i < point.length; i++){
+			vector[i] = new Fraction(point[i]);
+		}
 	}
+	
+	public Point(Fraction[] point){
+		vector = new Fraction[point.length];
+		for(int i = 0; i < point.length; i++){
+			vector[i] = new Fraction(point[i].getNumerator(), point[i].getDenominator());
+		}
+	}
+	
 
 	/*
 	 * How many different axis there are in this space
 	 * */
 	@Override
 	public int getDimension() {
-		// TODO Auto-generated method stub
-		return 0;
+		return vector.length;
 	}
 	
 	/*
@@ -22,17 +34,23 @@ public class Point implements RealPoint{
 	 * */
 	@Override
 	public boolean equals(RealPoint otherPoint) {
-		// TODO Auto-generated method stub
-		return false;
+		if((getDimension() != otherPoint.getDimension())){
+			return false;
+		}
+		for(int i = 0; i < vector.length; i++){
+			if(vector[i].equals(otherPoint.getAxisValue(i))){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/*
 	 * Returns the value of an axis
 	 * */
 	@Override
-	public Fraction getCoordinateValue(int axis) {
-		// TODO Auto-generated method stub
-		return null;
+	public Fraction getAxisValue(int axis) {
+		return vector[axis]; // May throw index out of bounds exception
 	}
 
 	/*
@@ -40,17 +58,27 @@ public class Point implements RealPoint{
 	 * */
 	@Override
 	public Fraction dot(RealPoint otherPoint) {
-		// TODO Auto-generated method stub
-		return null;
+		if(getDimension() != otherPoint.getDimension()){
+			throw new IllegalArgumentException("Point dimensions mismatch: this.getDimension =  " + this.getDimension() + " otherPoint.getDimension() = " + otherPoint.getDimension() );
+		}
+		Fraction dotSum = Fraction.ZERO;
+		for(int i = 0; i < getDimension(); i++){
+			dotSum = dotSum.add(vector[i].multiply(otherPoint.getAxisValue(i)));
+		}
+		return dotSum;
 	}
 
 	/*
 	 * Treat this point as a vector and return a new point has each axis value scaled by 'scalar'
 	 * */
 	@Override
-	public Fraction scaleBy(Fraction scalar) {
-		// TODO Auto-generated method stub
-		return null;
+	public RealPoint scaleBy(Fraction scalar) {
+		Fraction[] newVector = new Fraction[vector.length];
+		for(int i = 0; i < vector.length; i++){
+			newVector[i] = vector[i].multiply(scalar);
+		}
+		return (new Point(newVector)); // May want to optimize this call later on so that we do not copy values twice.
 	}
+	
 
 }

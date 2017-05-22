@@ -5,8 +5,8 @@ import org.apache.commons.math3.fraction.Fraction;
 public interface RealPoint {
 	public int getDimension();//Get the dimensions of the space that this point exists in.
 	public boolean equals(RealPoint otherPoint);
-	public Fraction getCoordinateValue(int axis);
+	public Fraction getAxisValue(int axis);
 	public Fraction dot(RealPoint otherPoint);
-	public Fraction scaleBy(Fraction scalar);
+	public RealPoint scaleBy(Fraction scalar);
 	
 }

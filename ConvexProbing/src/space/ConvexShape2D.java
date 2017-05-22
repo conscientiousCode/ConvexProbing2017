@@ -90,9 +90,9 @@ public class ConvexShape2D implements ConvexShape{
 				return 0;
 				
 			}else if(quadrant(p1) == 1 || quadrant(p1) == 2){
-				return(p1.getCoordinateValue(0).doubleValue() > p2.getCoordinateValue(0).doubleValue())?(-1):(1);
+				return(p1.getAxisValue(0).doubleValue() > p2.getAxisValue(0).doubleValue())?(-1):(1);
 			}else{ // quadrant 3 or 4
-				return(p1.getCoordinateValue(0).doubleValue() > p2.getCoordinateValue(0).doubleValue())?(1):(-1);
+				return(p1.getAxisValue(0).doubleValue() > p2.getAxisValue(0).doubleValue())?(1):(-1);
 			}
 		};
 		
@@ -120,14 +120,14 @@ public class ConvexShape2D implements ConvexShape{
 	}
 	
 	protected static int quadrant(Point point){
-		if(point.getCoordinateValue(0).doubleValue() > 0){
-			if(point.getCoordinateValue(1).doubleValue() > 0){
+		if(point.getAxisValue(0).doubleValue() > 0){
+			if(point.getAxisValue(1).doubleValue() > 0){
 				return 1;
 			}else{
 				return 4;
 			}
 		}else{
-			if(point.getCoordinateValue(1).doubleValue() > 0){
+			if(point.getAxisValue(1).doubleValue() > 0){
 				return 2;
 			}else{
 				return 3;
