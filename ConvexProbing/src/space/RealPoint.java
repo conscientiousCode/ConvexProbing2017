@@ -12,5 +12,6 @@ public interface RealPoint {
 	public Fraction getAxisValue(int axis);
 	public Fraction dot(RealPoint otherPoint);
 	public RealPoint scaleBy(Fraction scalar);
+	public double getMagnitude();
 	
 }
