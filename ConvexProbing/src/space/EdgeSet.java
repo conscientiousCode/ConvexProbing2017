@@ -35,7 +35,7 @@ public class EdgeSet implements EdgeSetInterface{
 	public boolean addEdge(RealPoint p1, RealPoint p2){
 		RealPoint[] edge = orderByMagnitude(p1,p2);
 		int searchResult = searchFor(edge);
-		if(searchResult > -1){
+		if(searchResult < 0){
 			return edges.add(edge);
 		}
 		return false;
@@ -43,13 +43,21 @@ public class EdgeSet implements EdgeSetInterface{
 	
 	@Override
 	public boolean containsEdge(RealPoint p1, RealPoint p2){
-		return false;
+		if(searchFor(new RealPoint[]{p1,p2}) > -1){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	@Override
 	public boolean removeEdge(RealPoint p1, RealPoint p2) {
-		// TODO Auto-generated method stub
-		return false;
+		int index = searchFor(new RealPoint[]{p1,p2});
+		if( index > -1){
+			return (edges.remove(index) != null)?(true):(false);
+		}else{
+			return false;
+		}
 	}
 	
 	/*The Values of the points will always be stored in descending order of magnitude*/
