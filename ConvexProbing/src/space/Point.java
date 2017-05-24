@@ -65,7 +65,7 @@ public class Point implements RealPoint{
 	@Override
 	public Fraction dot(RealPoint otherPoint) {
 		if(getDimension() != otherPoint.getDimension()){
-			throw new IllegalArgumentException("Point dimensions mismatch: this.getDimension =  " + this.getDimension() + " otherPoint.getDimension() = " + otherPoint.getDimension() );
+			throw new IllegalArgumentException("Point dimensions mismatch: this.getDimension =  " + this.getDimension() + " otherPoint.getDimension() = " + otherPoint.getDimension());
 		}
 		Fraction dotSum = Fraction.ZERO;
 		for(int i = 0; i < getDimension(); i++){
@@ -84,6 +84,11 @@ public class Point implements RealPoint{
 			newVector[i] = vector[i].multiply(scalar);
 		}
 		return (new Point(newVector)); // May want to optimize this call later on so that we do not copy values twice.
+	}
+	
+	@Override
+	public double getMagnitude(){
+		return(Math.sqrt(dot(this).doubleValue()));
 	}
 	
 
