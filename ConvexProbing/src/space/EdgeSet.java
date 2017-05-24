@@ -6,7 +6,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.*;
 
-
+/*
+ * Each two point set (representing an edge), is ordered by magnitude of its distance from the origin.
+ * If the two end points have the same magnitude, then it is ordered by each AxisValue of the points in the order of indexing getAxisValue(i), i in [a,b]
+ *
+ * 
+ */
 public class EdgeSet implements EdgeSetInterface{
 
 	
@@ -14,7 +19,7 @@ public class EdgeSet implements EdgeSetInterface{
 	
 	
 	
-	private ArrayList<RealPoint[]> edges;
+	protected ArrayList<RealPoint[]> edges;
 	private int dimensionOfEdges;
 	
 	public EdgeSet(int dimensionOfEdges){
@@ -23,6 +28,7 @@ public class EdgeSet implements EdgeSetInterface{
 	}
 	
 	public EdgeSet(RealPoint[][] pointPairs){
+		edges = new ArrayList<RealPoint[]>(pointPairs.length);
 		for(RealPoint[] edge: pointPairs){
 			if(edge.length != 2){
 				throw new IllegalArgumentException("At least one sub array does not have exactly two elements (more or less than 2 points when trying to represent an edge)");
@@ -61,7 +67,7 @@ public class EdgeSet implements EdgeSetInterface{
 	}
 	
 	/*The Values of the points will always be stored in descending order of magnitude*/
-	private static RealPoint[] orderByMagnitude(RealPoint p1, RealPoint p2){
+	protected static RealPoint[] orderByMagnitude(RealPoint p1, RealPoint p2){
 		RealPoint[] ordered = new RealPoint[2];
 		double magnitudeDiff = p1.getMagnitude() - p2.getMagnitude();
 		if(magnitudeDiff > 0){
@@ -89,7 +95,7 @@ public class EdgeSet implements EdgeSetInterface{
 	protected int searchFor(RealPoint[] edge){
 		edge = orderByMagnitude(edge[0], edge[1]);
 		for(int i = 0; i < edges.size(); i++){
-			if((compareByAxis.compare(edge[0], edges.get(i)[0]) == 0) && (compareByAxis.compare(edge[0], edges.get(i)[0]) == 0)){
+			if((compareByAxis.compare(edge[0], edges.get(i)[0]) == 0) && (compareByAxis.compare(edge[1], edges.get(i)[1]) == 0)){
 				return i;
 			}
 		}
