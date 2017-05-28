@@ -25,8 +25,7 @@ public class ConvexShape2D implements ConvexShape{
 		//Get Points on an ellipse and ensure that they are a sufficient distance away.
 		
 		selectPoints(numOfVertices); // initializes vertices
-		makeEdgeSet(numOfVertices);  // initializes 
-		
+		makeEdgeSet(numOfVertices);  // initializes
 			
 	}
 	

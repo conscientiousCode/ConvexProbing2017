@@ -42,8 +42,8 @@ public class TestEdgeSet {
 		};
 		
 		assertTrue(compareEdges.apply(inSet12, new Point[]{p1,p2}));
-		assertTrue(compareEdges.apply(inSet13, new Point[]{p3,p2}));
-		assertTrue(compareEdges.apply(inSet23, new Point[]{p3,p1}));
+		assertTrue(compareEdges.apply(inSet13, new Point[]{p3,p1}));
+		assertTrue(compareEdges.apply(inSet23, new Point[]{p3,p2}));
 		
 	}
 
