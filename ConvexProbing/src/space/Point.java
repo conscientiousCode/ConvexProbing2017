@@ -90,6 +90,5 @@ public class Point implements RealPoint{
 	public double getMagnitude(){
 		return(Math.sqrt(dot(this).doubleValue()));
 	}
-	
 
 }

@@ -26,7 +26,6 @@ public class ConvexShape2D implements ConvexShape{
 		
 		selectPoints(numOfVertices); // initializes vertices
 		makeEdgeSet(numOfVertices);  // initializes
-			
 	}
 	
 	protected void selectPoints(int numOfVertices){
@@ -57,7 +56,7 @@ public class ConvexShape2D implements ConvexShape{
 						}
 					}
 					if(!pointFailed){
-						pointSet[numOfConstructedVertices] = newPoint;
+						pointSet[numOfConstructedVertices++] = newPoint;
 					}
 					pointFailed = false;
 				}
@@ -79,7 +78,7 @@ public class ConvexShape2D implements ConvexShape{
 		}
 		
 		/*Compares points where the point associated with pi = 0 is the lowest on the ellipse,
-		 * and 2*pi-epsilon is the lowest 
+		 * and 2*pi-epsilon is the highest 
 		 * */
 		java.util.Comparator<Point> counterClockwiseOrientation = (Point p1, Point p2) -> {
 			/*int comparison = quadrant(p1) - quadrant(p2);
