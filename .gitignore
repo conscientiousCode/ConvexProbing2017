@@ -1,3 +1,4 @@
-*.project
 preferences
 *.preferences
+*.classpath
+ConvexProbing/.classpath
