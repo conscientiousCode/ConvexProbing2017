@@ -17,7 +17,7 @@ public class TestEdgeSet {
 	
 	@Before
 	public void init(){
-		edges = new EdgeSet(edgesInit);
+		edges = new EdgeSet(edgesInit);\
 	}
 
 	@Test
