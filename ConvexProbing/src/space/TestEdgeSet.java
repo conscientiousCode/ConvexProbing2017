@@ -17,11 +17,11 @@ public class TestEdgeSet {
 	
 	@Before
 	public void init(){
-		edges = new EdgeSet(edgesInit);\
+		edges = new EdgeSet(edgesInit);
 	}
 
 	@Test
-	public void testSearchForANDAdd() {
+	public void testHighlyCoupledMethodsSorry() {
 		//Add is dependent on Search for.
 		int indexOf12 = edges.searchFor(p1p2);
 		int indexOf13 = edges.searchFor(p1p3);
@@ -44,6 +44,20 @@ public class TestEdgeSet {
 		assertTrue(compareEdges.apply(inSet12, new Point[]{p1,p2}));
 		assertTrue(compareEdges.apply(inSet13, new Point[]{p3,p1}));
 		assertTrue(compareEdges.apply(inSet23, new Point[]{p3,p2}));
+		
+		//Contains and remove
+		assertTrue(edges.containsEdge(p1, p2));
+		edges.removeEdge(p1, p2);
+		assertFalse(edges.containsEdge(p1, p2));
+		
+		edges.addEdge(p1, p2);
+		assertTrue(edges.containsEdge(p1, p2));
+		
+		edges.removeEdge(p2, p1);
+		edges.removeEdge(p1, p3);
+		edges.removeEdge(p2, p3);
+		
+		assertFalse(edges.removeEdge(p3,p1));
 		
 	}
 

@@ -15,7 +15,7 @@ import java.util.function.*;
 public class EdgeSet implements EdgeSetInterface{
 
 	
-	protected static final Comparator compareByAxis = new AxisComparator();
+	protected static final Comparator<RealPoint> compareByAxis = new AxisComparator();
 	
 	
 	
@@ -28,10 +28,16 @@ public class EdgeSet implements EdgeSetInterface{
 	}
 	
 	public EdgeSet(RealPoint[][] pointPairs){
+		if(pointPairs != null && pointPairs.length > 0 && pointPairs[0] != null && pointPairs[0].length > 0){
+			this.dimensionOfEdges = pointPairs[0][0].getDimension();
+		}
 		edges = new ArrayList<RealPoint[]>(pointPairs.length);
 		for(RealPoint[] edge: pointPairs){
 			if(edge.length != 2){
 				throw new IllegalArgumentException("At least one sub array does not have exactly two elements (more or less than 2 points when trying to represent an edge)");
+			}else if(edge[0].getDimension() != dimensionOfEdges || edge[1].getDimension() != dimensionOfEdges){
+				RealPoint badPoint = (edge[0].getDimension() != dimensionOfEdges)?(edge[0]):(edge[1]);
+				throw new IllegalArgumentException("At least one point in input array pointPair: " + badPoint);
 			}
 			addEdge(edge[0], edge[1]);
 		}
@@ -39,6 +45,9 @@ public class EdgeSet implements EdgeSetInterface{
 	
 	@Override
 	public boolean addEdge(RealPoint p1, RealPoint p2){
+		if(p1 == null || p2 == null){
+			throw new IllegalArgumentException("NULL references as a point argument. An edge can only be defined between two non-null realpoints of the same dimension");
+		}
 		RealPoint[] edge = orderByMagnitude(p1,p2);
 		int searchResult = searchFor(edge);
 		if(searchResult < 0){
@@ -46,6 +55,8 @@ public class EdgeSet implements EdgeSetInterface{
 		}
 		return false;
 	}
+	
+	
 	
 	@Override
 	public boolean containsEdge(RealPoint p1, RealPoint p2){
@@ -56,6 +67,9 @@ public class EdgeSet implements EdgeSetInterface{
 		}
 	}
 
+	/**
+	 * If an undirected edge is present between the two points specified, then it is removed from the set and true is returned. False otherwise.
+	 */
 	@Override
 	public boolean removeEdge(RealPoint p1, RealPoint p2) {
 		int index = searchFor(new RealPoint[]{p1,p2});
