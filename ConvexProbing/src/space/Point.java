@@ -1,6 +1,7 @@
 package space;
 
 import org.apache.commons.math3.fraction.Fraction;
+import org.apache.commons.math3.fraction.BigFraction;
 
 public class Point implements RealPoint{
 	
@@ -63,13 +64,15 @@ public class Point implements RealPoint{
 	 * Treat points as vectors and return their dot product
 	 * */
 	@Override
-	public Fraction dot(RealPoint otherPoint) {
+	public double dot(RealPoint otherPoint) {
 		if(getDimension() != otherPoint.getDimension()){
 			throw new IllegalArgumentException("Point dimensions mismatch: this.getDimension =  " + this.getDimension() + " otherPoint.getDimension() = " + otherPoint.getDimension());
 		}
-		Fraction dotSum = Fraction.ZERO;
+		/*Had to use a big fraction here because of denominator overflow causes an exception...*/
+		double dotSum = 0;
+		BigFraction f1, f2;
 		for(int i = 0; i < getDimension(); i++){
-			dotSum = dotSum.add(vector[i].multiply(otherPoint.getAxisValue(i)));
+			dotSum += vector[i].doubleValue()*(otherPoint.getAxisValue(i).doubleValue());
 		}
 		return dotSum;
 	}
@@ -88,7 +91,17 @@ public class Point implements RealPoint{
 	
 	@Override
 	public double getMagnitude(){
-		return(Math.sqrt(dot(this).doubleValue()));
+		return Math.sqrt(dot(this));
+	}
+	
+	public String toString(){
+		StringBuilder builder = new StringBuilder(getDimension()*2 -1 + 2);
+		builder.append('[');
+		for(Fraction frac : vector){
+			builder.append(frac.doubleValue() + ", ");
+		}
+		builder.append(']');
+		return builder.toString();
 	}
 
 }

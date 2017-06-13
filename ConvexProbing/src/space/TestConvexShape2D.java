@@ -62,4 +62,11 @@ public class TestConvexShape2D {
 		assertTrue(ConvexShape2D.pointOrder(getUnitCirclePoint(PI*(15.0/8.0)), q4) > 0);
 	}
 	
+	@Test
+	public void TestContructorOfRandomConvexShape(){
+		ConvexShape2D shape = new ConvexShape2D(10);
+	}
+	
+	
+	
 }

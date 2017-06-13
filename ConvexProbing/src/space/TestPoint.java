@@ -66,17 +66,19 @@ public class TestPoint {
 			dotValueP1P2 = dotValueP1P2.add((new Fraction(p1Init[i])).multiply((new Fraction(p2Init[i]))));
 		}
 		
-		assertTrue(dotValueP1P2.equals(new Fraction(10)));// Computed dot product by hand
-		assertTrue(dotValueP1P2.equals(p1.dot(p2)));
-		assertTrue(dotValueP1P2.equals(p2.dot(p1)));
+		assertTrue(isClose(dotValueP1P2.doubleValue(),10));// Computed dot product by hand
+		assertTrue(isClose(dotValueP1P2.doubleValue(),p1.dot(p2)));
+		assertTrue(isClose(dotValueP1P2.doubleValue(),p2.dot(p1)));
 		
-		assertTrue(p1.dot(ORIGIN).equals(Fraction.ZERO));
-		
-		assertTrue(p1.dot(ONE).equals(new Fraction(6))); // Computed by hand, if p1 changes expect this test to fail
+		assertTrue(p1.dot(ORIGIN) == 0.0);
+		assertTrue(isClose(p1.dot(ONE), 6)); // Computed by hand, if p1 changes expect this test to fail
 		
 		equals();
 	}
 	
+	private boolean isClose(double p1, double p2){
+		return Math.abs(p1-p2)< 0.00000000000001;
+	}
 
 
 }
