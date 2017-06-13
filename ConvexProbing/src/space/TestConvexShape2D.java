@@ -1,6 +1,7 @@
 package space;
 
 import static org.junit.Assert.*;
+import static java.lang.Math.PI;
 
 import org.junit.Test;
 
@@ -9,9 +10,13 @@ public class TestConvexShape2D {
 	public Point p1 = new Point(new double[]{1,0}), p2 = new Point(new double[]{0,1}), 
 			     p3 = new Point(new double[]{-1, 0}), p4 = new Point(new double[]{0,-1});
 	
-	Point q1 = new Point(new double[]{1,1}), q2 = new Point(new double[]{-1,1}),
-		  q3 = new Point(new double[]{-1,-1}), q4 = new Point(new double[]{1,-1});
+	Point q1 = getUnitCirclePoint(PI*1.0/4), q2 = getUnitCirclePoint(PI*3.0/4),
+		  q3 = getUnitCirclePoint(PI*5.0/4), q4 = getUnitCirclePoint(PI*7.0/4);
 
+	private static Point getUnitCirclePoint(double t){
+		return new Point(new double[]{Math.cos(t), Math.sin(t)});
+	}
+	
 	@Test
 	public void TestQuadrant(){
 		
@@ -44,8 +49,17 @@ public class TestConvexShape2D {
 		assertTrue(ConvexShape2D.pointOrder(q1, q4) < 0);
 		assertTrue(ConvexShape2D.pointOrder(q2, q4) < 0);
 		
+		assertTrue(ConvexShape2D.pointOrder(q1, getUnitCirclePoint(PI*(3.0/8.0))) < 0);
+		assertTrue(ConvexShape2D.pointOrder(getUnitCirclePoint(PI*(3.0/8.0)), q1) > 0);
 		
+		assertTrue(ConvexShape2D.pointOrder(q2, getUnitCirclePoint(PI*(7.0/8.0))) < 0);
+		assertTrue(ConvexShape2D.pointOrder(getUnitCirclePoint(PI*(7.0/8.0)), q2) > 0);
 		
+		assertTrue(ConvexShape2D.pointOrder(q3, getUnitCirclePoint(PI*(11.0/8.0))) < 0);
+		assertTrue(ConvexShape2D.pointOrder(getUnitCirclePoint(PI*(11.0/8.0)), q3) > 0);
+		
+		assertTrue(ConvexShape2D.pointOrder(q4, getUnitCirclePoint(PI*(15.0/8.0))) < 0);
+		assertTrue(ConvexShape2D.pointOrder(getUnitCirclePoint(PI*(15.0/8.0)), q4) > 0);
 	}
 	
 }
