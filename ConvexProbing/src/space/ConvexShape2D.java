@@ -60,7 +60,7 @@ public class ConvexShape2D implements ConvexShape{
 					vertices.add(new Point(point));
 				}
 	}
-	
+	/*
 	protected void makeEdgeSet(int numOfVertices){
 				
 		java.util.ArrayList<Point>[] quadrantsList = new java.util.ArrayList[4];
@@ -89,6 +89,31 @@ public class ConvexShape2D implements ConvexShape{
 				orderedPoints[index++] =  value;
 			}
 		}
+		
+		if(orderedPoints.length >= 2){
+			edges.addEdge(orderedPoints[0], orderedPoints[orderedPoints.length-1]);
+		}
+		for(int i = 1;i < orderedPoints.length; i++){
+			edges.addEdge(orderedPoints[i-1], orderedPoints[i]);
+		}
+		
+	}
+	*/
+	protected void makeEdgeSet(int numOfVertices){
+		java.util.Comparator<Point> pointOrderer = (Point p1, Point p2) -> {
+			 return pointOrder(p1,p2);
+		};
+		
+		Point[] orderedPoints = new Point[vertices.size()];
+		int index = 0;
+		for(Point p : vertices){
+			orderedPoints[index++] = p;
+		}
+		Arrays.sort(orderedPoints, pointOrderer);
+		
+		System.out.println(Arrays.toString(orderedPoints));
+		
+		edges = new EdgeSet(2);
 		
 		if(orderedPoints.length >= 2){
 			edges.addEdge(orderedPoints[0], orderedPoints[orderedPoints.length-1]);
