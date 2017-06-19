@@ -7,7 +7,7 @@ public class Point implements RealPoint{
 	
 	Fraction[] vector;
 	
-	public Point(double[] point){
+	public Point(double... point){
 		if(point == null){
 			throw new NullPointerException("It does not make sense to have a point without any dimension");
 		}
@@ -16,6 +16,7 @@ public class Point implements RealPoint{
 			vector[i] = new Fraction(point[i]);
 		}
 	}
+	
 	
 	public Point(Fraction[] point){
 		if(point == null){
@@ -103,9 +104,21 @@ public class Point implements RealPoint{
 		return (new Point(newVector)); // May want to optimize this call later on so that we do not copy values twice.
 	}
 	
+	public Point scaleBy(Double scalar){
+		double[] newVector = new double[vector.length];
+		for(int i = 0; i < vector.length; i++){
+			newVector[i] = vector[i].doubleValue()*scalar;
+		}
+		return (new Point(newVector)); // May want to optimize this call later on so that we do not copy values twice.
+	}
+	
 	@Override
 	public double getMagnitude(){
 		return Math.sqrt(dot(this));
+	}
+	/*This method is broken by java rounding errors*/
+	public Point getUnitVector(){
+		return this.scaleBy(1/this.getMagnitude());
 	}
 	
 	public String toString(){

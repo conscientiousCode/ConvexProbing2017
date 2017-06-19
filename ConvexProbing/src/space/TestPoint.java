@@ -118,4 +118,10 @@ public class TestPoint {
 		
 	}
 	
+	@Test
+	public void testGetUnitVector(){
+		System.out.println(p1.getUnitVector().getMagnitude());
+		assertTrue(isClose(p1.getUnitVector().getMagnitude(), 1.0));
+	}
+	
 }
