@@ -59,7 +59,21 @@ public class Point implements RealPoint{
 	public Fraction getAxisValue(int axis) {
 		return vector[axis]; // May throw index out of bounds exception
 	}
+	
+	/*adds p to this point as though they are vectors and returns the result as a new object*/
+	public Point add(RealPoint p){
+		Point.haveSameDimension(this, p);//If they do not have the same dimension, then an IllegalArgumentException is thrown.
+		Fraction[] newPoint = new Fraction[this.getDimension()];
+		for(int i = 0; i < this.getDimension(); i++){
+			newPoint[i] = p.getAxisValue(i).add(this.getAxisValue(i));
+		}
+		return new Point(newPoint);
+	}
 
+	public Point subtract(RealPoint p){
+		return add(p.scaleBy(new Fraction(-1)));
+	}
+	
 	/*
 	 * Treat points as vectors and return their dot product
 	 * */
@@ -81,7 +95,7 @@ public class Point implements RealPoint{
 	 * Treat this point as a vector and return a new point has each axis value scaled by 'scalar'
 	 * */
 	@Override
-	public RealPoint scaleBy(Fraction scalar) {
+	public Point scaleBy(Fraction scalar) {
 		Fraction[] newVector = new Fraction[vector.length];
 		for(int i = 0; i < vector.length; i++){
 			newVector[i] = vector[i].multiply(scalar);
@@ -102,6 +116,21 @@ public class Point implements RealPoint{
 		}
 		builder.append(']');
 		return builder.toString();
+	}
+	
+	/*The empty set is true by default*/
+	public static boolean haveSameDimension(RealPoint... points){
+		if(points == null || points.length == 0){//if it is an empty set
+			return true;
+		}else{
+			int dimension = points[0].getDimension();
+			for(RealPoint p : points){
+				if(p.getDimension() != dimension){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 }

@@ -3,6 +3,7 @@ package space;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.*;
 
@@ -12,7 +13,7 @@ import java.util.function.*;
  *
  * 
  */
-public class EdgeSet implements EdgeSetInterface{
+public class EdgeSet implements EdgeSetInterface, Iterable<RealPoint[]>{
 
 	
 	protected static final Comparator<RealPoint> compareByAxis = new AxisComparator();
@@ -128,6 +129,12 @@ public class EdgeSet implements EdgeSetInterface{
 			return 0;
 		}
 		
+	}
+
+
+	@Override
+	public Iterator<RealPoint[]> iterator() {
+		return edges.iterator();
 	}
 	
 }

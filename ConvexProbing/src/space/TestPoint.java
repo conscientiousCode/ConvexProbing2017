@@ -80,5 +80,42 @@ public class TestPoint {
 		return Math.abs(p1-p2)< 0.00000000000001;
 	}
 
+	@Test
+	public void testHaveSameDimension(){
+		final int dimension = 3;
+		final int MAX_MAGNITUDE = 100;
+		Point[] points = new Point[10];
+		java.util.Random rdm = new java.util.Random();
+		double[] generatedPoint;
+		for(int i = 0; i< points.length; i++){
+			generatedPoint = new double[dimension];
+			for(int j = 0; j < dimension; j++){
+				generatedPoint[j] = rdm.nextDouble()*MAX_MAGNITUDE;
+			}
+			points[i] = new Point(generatedPoint);
+		}
+		
+		assertTrue(Point.haveSameDimension(points));
+		
+		points[0] = new Point(new double[]{1});
+		assertFalse(Point.haveSameDimension(points));
+		
+		points = null;
+		assertTrue(Point.haveSameDimension(points));//Empty set is true by default
+		
+		points = new Point[0];
+		assertTrue(Point.haveSameDimension(points));
+	}
 
+	@Test
+	public void testAdd(){
+		assertTrue(p1.add(ORIGIN).equals(p1));
+		assertTrue(ORIGIN.add(p1).equals(p1));
+		
+		assertFalse(p1.add(p1).equals(p1));
+		assertTrue(p1.add(p2).equals(p2.add(p1)));
+		assertTrue(p1.add(p1).equals(p1.scaleBy(new Fraction(2))));
+		
+	}
+	
 }

@@ -3,10 +3,9 @@ package space;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
-import java.util.Set;
-import org.apache.commons.math3.fraction.*;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.ArrayList;
 
 
 public class ConvexShape2D implements ConvexShape{
@@ -16,11 +15,11 @@ public class ConvexShape2D implements ConvexShape{
 	private static final double MINIMUM_POINT_DISTANCE = 0.0000001;
 	
 	
-	private Set<Point> vertices;
+	private ArrayList<Point> vertices;
 	private EdgeSet edges;
 	private RandomEllipse ellipse;
 	
-	
+	/*Constructs a random convex shape with the number of vertices specified*/
 	public ConvexShape2D(int numOfVertices){
 		/*TO DO: IMPLEMENT CHECK TO ensure numOfVertices can be constructed given MINIMUM_POINT_DISTANCE*/
 		//Get Points on an ellipse and ensure that they are a sufficient distance away.
@@ -31,12 +30,13 @@ public class ConvexShape2D implements ConvexShape{
 		makeEdgeSet(numOfVertices);  // initializes
 	}
 	
+	/*Selects points randomly on a random ellipse and adds them to the vertex set*/
 	protected void selectPoints(int numOfVertices){
 		// construct points and check if they are far enough apart
 				java.util.function.BiFunction<double[], double[], Double> distanceBetweenPoints = (double[] p1, double[] p2) -> {
 					return (Math.sqrt(Math.pow(p1[0]-p2[0],2)+ Math.pow(p1[1]-p2[1], 2)));
 				};
-				
+				/*Get the points*/
 				int numOfConstructedVertices = 0;
 				double[][] pointSet = new double[numOfVertices][2];
 				double[] newPoint;
@@ -55,71 +55,27 @@ public class ConvexShape2D implements ConvexShape{
 					}
 					pointFailed = false;
 				}
-				vertices = new HashSet<Point>(numOfVertices);
-				for(double[] point: pointSet){
-					vertices.add(new Point(point));
-				}
-	}
-	/*
-	protected void makeEdgeSet(int numOfVertices){
 				
-		java.util.ArrayList<Point>[] quadrantsList = new java.util.ArrayList[4];
-		for(int i = 0; i < 4; i++){
-			quadrantsList[i] = new java.util.ArrayList<Point>();
-		}
-		
-		for(Point point: vertices){
-			quadrantsList[quadrant(point)-1].add(point);
-		}
-		
-		java.util.Comparator<Point> pointOrderer = (Point p1, Point p2) -> {
-			 return pointOrder(p1,p2);
-		};
-		
-		Point[][] quadrants = new Point[4][];
-		for(int i = 0; i < 4; i++){
-			quadrants[i] = quadrantsList[i].toArray(new Point[0]);
-			Arrays.sort(quadrants[i], pointOrderer);
-		}
-		
-		Point[] orderedPoints = new Point[numOfVertices];
-		int index = 0;
-		for(int i = 0; i < 4; i++){
-			for(Point value: quadrants[i]){
-				orderedPoints[index++] =  value;
-			}
-		}
-		
-		if(orderedPoints.length >= 2){
-			edges.addEdge(orderedPoints[0], orderedPoints[orderedPoints.length-1]);
-		}
-		for(int i = 1;i < orderedPoints.length; i++){
-			edges.addEdge(orderedPoints[i-1], orderedPoints[i]);
-		}
-		
+				Point[] orderedPointSet = orderPointSet(pointSet);
+				vertices = new ArrayList<Point>(orderedPointSet.length);
+				for(Point point : orderedPointSet){
+					vertices.add(point);
+				}
+				/*Add the points*/
 	}
-	*/
+	
+	/*Constructs the edge set of a ramdomly generated and ordered vertex set*/ 
 	protected void makeEdgeSet(int numOfVertices){
-		java.util.Comparator<Point> pointOrderer = (Point p1, Point p2) -> {
-			 return pointOrder(p1,p2);
-		};
 		
-		Point[] orderedPoints = new Point[vertices.size()];
-		int index = 0;
-		for(Point p : vertices){
-			orderedPoints[index++] = p;
-		}
-		Arrays.sort(orderedPoints, pointOrderer);
-		
-		System.out.println(Arrays.toString(orderedPoints));
+		System.out.println(vertices.toString());
 		
 		edges = new EdgeSet(2);
 		
-		if(orderedPoints.length >= 2){
-			edges.addEdge(orderedPoints[0], orderedPoints[orderedPoints.length-1]);
+		if(vertices.size() >= 2){
+			edges.addEdge( vertices.get(0), vertices.get(vertices.size()-1));
 		}
-		for(int i = 1;i < orderedPoints.length; i++){
-			edges.addEdge(orderedPoints[i-1], orderedPoints[i]);
+		for(int i = 1;i < vertices.size(); i++){
+			edges.addEdge(vertices.get(i-1), vertices.get(i));
 		}
 		
 	}
@@ -150,10 +106,10 @@ public class ConvexShape2D implements ConvexShape{
 		}
 	}
 
+	/*Returns an iterator of RealPoints[2] over the edge set*/
 	@Override
-	public Iterator<Point> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+	public Iterator<RealPoint[]> iterator() {
+		return edges.iterator();
 	}
 
 	@Override
@@ -213,4 +169,35 @@ public class ConvexShape2D implements ConvexShape{
 
 	}
 
+	/*The point set is a 2 dimensional array where the first dimension represents the number of points, and the second dimension is constant and represents the dimension of the
+	 * points in space*/
+	protected static Point[] orderPointSet(double[][] pointSet){
+		java.util.Comparator<Point> pointOrderer = (Point p1, Point p2) -> {
+			 return pointOrder(p1,p2);
+		};
+		
+		Point[] orderedPoints = new Point[pointSet.length];
+		for(int i = 0; i < pointSet.length; i++){
+			orderedPoints[i] = new Point(pointSet[i]);
+		}
+			
+		Arrays.sort(orderedPoints, pointOrderer);
+		return orderedPoints;
+		
+	}
+	
+	/*The oracle function that returns the largest magnitude of alignment in the direction of p from the set represented by this convex shape*/
+	public double oracle(Point p){
+		if(p.getDimension() != 2){
+			throw new IllegalArgumentException("The point p must be of dimension 2");
+		}
+		
+		double max = 0;
+		for(Point v : vertices){
+			if(v.dot(p) > max){
+				max = v.dot(p);
+			}
+		}
+		return max;
+	}
 }

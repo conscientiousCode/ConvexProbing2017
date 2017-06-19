@@ -1,6 +1,6 @@
 package space;
 
-public interface ConvexShape extends Iterable<Point>{
+public interface ConvexShape extends Iterable<RealPoint[]>{
 	
 	public int getNumVertices();
 	public boolean hasVertex(Point point);
