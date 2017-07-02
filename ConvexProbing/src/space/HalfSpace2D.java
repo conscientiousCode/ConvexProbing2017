@@ -19,12 +19,24 @@ public class HalfSpace2D {
 		testDimension(p);
 		//line between  p and pointInHalfSpace , say q, is: (q-p)*t + p, for t in [0,1]
 		//line between 
+		return false;
 	}
 	
 	private void testDimension(Point p){
 		if(p.getDimension() != 2){
 			throw new IllegalArgumentException("p can only be in the halfspace if it has the same dimension of the halfspace");
 		}
+	}
+	
+	public Point getIntersection(HalfSpace2D otherHalf){
+		Double[] intersection = division.pointOfIntersection(otherHalf.division);
+		double[] dIntersection = new double[intersection.length];
+		if(intersection != null && intersection[0] != Double.POSITIVE_INFINITY){
+			for(int i = 0; i < intersection.length; i++){
+				dIntersection[i] = intersection[i];
+			}
+		}
+		return new Point(dIntersection);
 	}
 	
 	class Line{
@@ -38,8 +50,8 @@ public class HalfSpace2D {
 		}
 		
 		public Double[] pointOfIntersection(Line otherLine){
-			double[][] A = {{this.direction.getAxisValue(0).doubleValue(), -1*otherLine.direction.getAxisValue(0).doubleValue()},
-					       {this.direction.getAxisValue(1).doubleValue(), -1*otherLine.direction.getAxisValue(0).doubleValue()}};
+			double[][] A = {{this.direction.getAxisValue(0), -1*otherLine.direction.getAxisValue(0)},
+					       {this.direction.getAxisValue(1), -1*otherLine.direction.getAxisValue(0)}};
 			
 			double determinant = A[0][0]*A[1][1] - A[0][1]*A[1][0];
 			if(determinant < SINGULARITY_THRESHOLD){//This is bad due to double inaccuracies
@@ -50,8 +62,8 @@ public class HalfSpace2D {
 						A[i][j] = (1/determinant)*A[i][j];
 					}
 				}
-				double x = otherLine.pointOnLine.getAxisValue(0).doubleValue() - this.pointOnLine.getAxisValue(0).doubleValue();
-				double y = otherLine.pointOnLine.getAxisValue(1).doubleValue() - this.pointOnLine.getAxisValue(1).doubleValue();
+				double x = otherLine.pointOnLine.getAxisValue(0) - this.pointOnLine.getAxisValue(0);
+				double y = otherLine.pointOnLine.getAxisValue(1) - this.pointOnLine.getAxisValue(1);
 				
 				return new Double[]{x*A[0][0] + y*A[0][1], x*A[1][0] + y*A[1][1]};
 			}
@@ -60,6 +72,9 @@ public class HalfSpace2D {
 	}
 	
 	public static void main(String[] args){
-		
+		Point dir = new Point(1,1), onLine = new Point(1,0), inSpace = new Point(0,0); 
+		HalfSpace2D h1 = new HalfSpace2D(dir, onLine, inSpace);
+		HalfSpace2D h2 = new HalfSpace2D(new Point(-1,-1),new Point(1,0), new Point(0,0));
+		System.out.println(h1.getIntersection(h2));
 	}
 }

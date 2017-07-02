@@ -51,7 +51,7 @@ public class TestConvexShape2D {
 		
 		assertTrue(ConvexShape2D.pointOrder(q1, getUnitCirclePoint(PI*(3.0/8.0))) < 0);
 		assertTrue(ConvexShape2D.pointOrder(getUnitCirclePoint(PI*(3.0/8.0)), q1) > 0);
-		
+	
 		assertTrue(ConvexShape2D.pointOrder(q2, getUnitCirclePoint(PI*(7.0/8.0))) < 0);
 		assertTrue(ConvexShape2D.pointOrder(getUnitCirclePoint(PI*(7.0/8.0)), q2) > 0);
 		

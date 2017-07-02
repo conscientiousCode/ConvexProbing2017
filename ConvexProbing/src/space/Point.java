@@ -5,29 +5,19 @@ import org.apache.commons.math3.fraction.BigFraction;
 
 public class Point implements RealPoint{
 	
-	Fraction[] vector;
+	private static final double INEQUALITY_THRESHOLD = 0.00000000000001;
+	
+	double[] vector;
 	
 	public Point(double... point){
 		if(point == null){
 			throw new NullPointerException("It does not make sense to have a point without any dimension");
 		}
-		vector = new Fraction[point.length];
+		vector = new double[point.length];
 		for(int i = 0; i < point.length; i++){
-			vector[i] = new Fraction(point[i]);
+			vector[i] = point[i];
 		}
 	}
-	
-	
-	public Point(Fraction[] point){
-		if(point == null){
-			throw new NullPointerException("It does not make sense to have a point without any dimension");
-		}
-		vector = new Fraction[point.length];
-		for(int i = 0; i < point.length; i++){
-			vector[i] = new Fraction(point[i].getNumerator(), point[i].getDenominator());
-		}
-	}
-	
 
 	/*
 	 * How many different axis there are in this space
@@ -46,7 +36,7 @@ public class Point implements RealPoint{
 			return false;
 		}
 		for(int i = 0; i < vector.length; i++){
-			if(!vector[i].equals(otherPoint.getAxisValue(i))){
+			if(Math.abs(vector[i] - otherPoint.getAxisValue(i)) > INEQUALITY_THRESHOLD){
 				return false;
 			}
 		}
@@ -57,22 +47,22 @@ public class Point implements RealPoint{
 	 * Returns the value of an axis
 	 * */
 	@Override
-	public Fraction getAxisValue(int axis) {
+	public double getAxisValue(int axis) {
 		return vector[axis]; // May throw index out of bounds exception
 	}
 	
 	/*adds p to this point as though they are vectors and returns the result as a new object*/
 	public Point add(RealPoint p){
 		Point.haveSameDimension(this, p);//If they do not have the same dimension, then an IllegalArgumentException is thrown.
-		Fraction[] newPoint = new Fraction[this.getDimension()];
+		double [] newPoint = new double[this.getDimension()];
 		for(int i = 0; i < this.getDimension(); i++){
-			newPoint[i] = p.getAxisValue(i).add(this.getAxisValue(i));
+			newPoint[i] = p.getAxisValue(i) + this.getAxisValue(i);
 		}
 		return new Point(newPoint);
 	}
 
 	public Point subtract(RealPoint p){
-		return add(p.scaleBy(new Fraction(-1)));
+		return add(p.scaleBy(-1));
 	}
 	
 	/*
@@ -87,27 +77,16 @@ public class Point implements RealPoint{
 		double dotSum = 0;
 		BigFraction f1, f2;
 		for(int i = 0; i < getDimension(); i++){
-			dotSum += vector[i].doubleValue()*(otherPoint.getAxisValue(i).doubleValue());
+			dotSum += vector[i]*(otherPoint.getAxisValue(i));
 		}
 		return dotSum;
 	}
 
-	/*
-	 * Treat this point as a vector and return a new point has each axis value scaled by 'scalar'
-	 * */
 	@Override
-	public Point scaleBy(Fraction scalar) {
-		Fraction[] newVector = new Fraction[vector.length];
-		for(int i = 0; i < vector.length; i++){
-			newVector[i] = vector[i].multiply(scalar);
-		}
-		return (new Point(newVector)); // May want to optimize this call later on so that we do not copy values twice.
-	}
-	
-	public Point scaleBy(Double scalar){
+	public Point scaleBy(double scalar){
 		double[] newVector = new double[vector.length];
 		for(int i = 0; i < vector.length; i++){
-			newVector[i] = vector[i].doubleValue()*scalar;
+			newVector[i] = vector[i]*scalar;
 		}
 		return (new Point(newVector)); // May want to optimize this call later on so that we do not copy values twice.
 	}
@@ -124,8 +103,8 @@ public class Point implements RealPoint{
 	public String toString(){
 		StringBuilder builder = new StringBuilder(getDimension()*2 -1 + 2);
 		builder.append('[');
-		for(Fraction frac : vector){
-			builder.append(frac.doubleValue() + ", ");
+		for(double value : vector){
+			builder.append(value + ", ");
 		}
 		builder.append(']');
 		return builder.toString();

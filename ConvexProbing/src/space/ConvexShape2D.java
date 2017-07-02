@@ -30,6 +30,12 @@ public class ConvexShape2D implements ConvexShape{
 		makeEdgeSet(numOfVertices);  // initializes
 	}
 	
+	public static ConvexShape2D getRandomShape(int numberOfVertices){
+		if(numberOfVertices <= 0){
+			throw new IllegalArgumentException("When constructing a convex polytope at least one vertice is required.");
+		}
+	}
+	
 	/*Selects points randomly on a random ellipse and adds them to the vertex set*/
 	protected void selectPoints(int numOfVertices){
 		// construct points and check if they are far enough apart
@@ -85,20 +91,20 @@ public class ConvexShape2D implements ConvexShape{
 	 * returns the quadrant that Point point exists in, if the point falls on an axis line, it goes to the quadrant that is just previous to the line
 	 * */
 	protected static int quadrant(Point point){
-		if(point.getAxisValue(0).doubleValue() == 0){ // edge case of (0,y)
-			return (point.getAxisValue(1).doubleValue() > 0)?(1):(3); // If y values is greater than zero, 1, otherwise 3
-		}else if(point.getAxisValue(1).doubleValue() == 0){//edge case of (0,x)
+		if(point.getAxisValue(0) == 0){ // edge case of (0,y)
+			return (point.getAxisValue(1) > 0)?(1):(3); // If y values is greater than zero, 1, otherwise 3
+		}else if(point.getAxisValue(1) == 0){//edge case of (0,x)
 			/* For consistency, (x,0) is considered to be in quadrant 4 as it is the previous quadrant assuming we arrived at
 			 * this point after some number of counter-clockwise revolutions*/
-			return (point.getAxisValue(0).doubleValue() > 0)?(4):(2);
-		}else if(point.getAxisValue(0).doubleValue() > 0){//none-edge case
-			if(point.getAxisValue(1).doubleValue() > 0){
+			return (point.getAxisValue(0) > 0)?(4):(2);
+		}else if(point.getAxisValue(0) > 0){//none-edge case
+			if(point.getAxisValue(1) > 0){
 				return 1;
 			}else{
 				return 4;
 			}
 		}else{
-			if(point.getAxisValue(1).doubleValue() > 0){
+			if(point.getAxisValue(1) > 0){
 				return 2;
 			}else{
 				return 3;
@@ -158,9 +164,9 @@ public class ConvexShape2D implements ConvexShape{
 				return 0;
 			} else {
 				if (quadrant(p1) == 1 || quadrant(p1) == 2) {
-					return (p1.getAxisValue(0).doubleValue() > p2.getAxisValue(0).doubleValue()) ? (-1) : (1);
+					return (p1.getAxisValue(0) > p2.getAxisValue(0)) ? (-1) : (1);
 				} else {
-					return (p1.getAxisValue(0).doubleValue() < p2.getAxisValue(0).doubleValue()) ? (-1) : (1);
+					return (p1.getAxisValue(0) < p2.getAxisValue(0)) ? (-1) : (1);
 				}
 			}
 		} else {

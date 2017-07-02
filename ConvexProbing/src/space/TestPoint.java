@@ -10,8 +10,8 @@ public class TestPoint {
 
 	static final double[] p1Init = {1.0,2.0,3.0};
 	static final double[] p2Init = {3.0,2.0,1.0};
-	static final Fraction[] zero = {Fraction.ZERO, Fraction.ZERO, Fraction.ZERO};
-	static final Fraction[] one = {Fraction.ONE,Fraction.ONE,Fraction.ONE};
+	static final double[] zero = {0,0,0};
+	static final double[] one = {1,1, 1};
 	static final Point ORIGIN = new Point(zero);
 	static final Point ONE = new Point(one);
 	
@@ -52,9 +52,9 @@ public class TestPoint {
 	@Test
 	public void testGetAxisValue(){
 		for(int i = 0; i < p1Init.length; i++){
-			assertTrue(ORIGIN.getAxisValue(i).equals(Fraction.ZERO));
-			assertTrue(p1.getAxisValue(i).equals(new Fraction(p1Init[i])));
-			assertTrue(p2.getAxisValue(i).equals(new Fraction(p2Init[i])));
+			assertTrue(ORIGIN.getAxisValue(i) == 0.0);
+			assertTrue(p1.getAxisValue(i) == p1Init[i]);
+			assertTrue(p2.getAxisValue(i) == p2Init[i]);
 		}
 		equals();
 	}
@@ -114,7 +114,7 @@ public class TestPoint {
 		
 		assertFalse(p1.add(p1).equals(p1));
 		assertTrue(p1.add(p2).equals(p2.add(p1)));
-		assertTrue(p1.add(p1).equals(p1.scaleBy(new Fraction(2))));
+		assertTrue(p1.add(p1).equals(p1.scaleBy(2)));
 		
 	}
 	

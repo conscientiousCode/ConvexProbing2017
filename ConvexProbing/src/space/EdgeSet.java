@@ -122,8 +122,8 @@ public class EdgeSet implements EdgeSetInterface, Iterable<RealPoint[]>{
 		@Override
 		public int compare(RealPoint p1, RealPoint p2) {
 			for(int i = 0; i < p1.getDimension(); i++){
-				if(p1.getAxisValue(i).compareTo(p2.getAxisValue(i)) != 0){
-					return p1.getAxisValue(i).compareTo(p2.getAxisValue(i));
+				if(p1.getAxisValue(i) != p2.getAxisValue(i)){
+					return (p1.getAxisValue(i) > p2.getAxisValue(i))?(1):(-1);
 				}
 			}
 			return 0;
