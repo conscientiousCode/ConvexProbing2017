@@ -13,5 +13,6 @@ public interface RealPoint {
 	public double dot(RealPoint otherPoint);
 	public RealPoint scaleBy(double scalar);
 	public double getMagnitude();
+	public RealPoint negate();
 	
 }

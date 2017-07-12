@@ -130,11 +130,36 @@ public class EdgeSet implements EdgeSetInterface, Iterable<RealPoint[]>{
 		}
 		
 	}
+	
+	public boolean equals(EdgeSet otherSet){
+		if(this.edges.size() != otherSet.edges.size()){
+			return false;
+		}
+		for(RealPoint[] edge: otherSet.edges){
+			if(this.searchFor(edge) < 0){
+				return false;
+			}
+		}
+		return true;
+	}
 
+	public int size(){
+		return edges.size();
+	}
 
 	@Override
 	public Iterator<RealPoint[]> iterator() {
 		return edges.iterator();
 	}
+	
+	@Override
+	public String toString(){
+		StringBuilder str = new StringBuilder("{");
+		for(RealPoint[] points: edges){
+			str.append("(" + points[0] + "," + points[1] + "),");
+		}
+		str.append('}');
+		return str.toString();
+	} 
 	
 }

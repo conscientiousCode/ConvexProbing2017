@@ -6,43 +6,43 @@ import java.util.Iterator;
 import java.util.Random;
 
 public class ConvexPolytope2D implements ConvexShape{
-	private static final Random rdm = new Random();
-	private static final int MAX_BOUND = 200;
+	
 	private static final double MINIMUM_POINT_DISTANCE = 0.0000001;
 	
 	private ArrayList<Point> vertices;
 	private EdgeSet edges;
+	private boolean isHullCurrent;
 	
+	public ConvexPolytope2D(){
+		
+	}
 	
-	@Override
-	public Iterator<RealPoint[]> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+	//Create an uninitialized object
+	protected ConvexPolytope2D(ArrayList<Point> vertices){
+		this.vertices = vertices;
+		makeEdgeSet(vertices.size());
+		isHullCurrent = true;
 	}
-
-	@Override
-	public int getNumVertices() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean hasVertex(Point point) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean hasEdgeBetween(Point p1, Point p2) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	
-	public static ConvexPolytope2D randomPolytope(int numOfVertices){
+	/*Constructs the edge set of a ramdomly generated and ordered vertex set*/ 
+	protected void makeEdgeSet(int numOfVertices){
+		
+		edges = new EdgeSet(2);
+		
+		if(vertices.size() >= 2){
+			edges.addEdge( vertices.get(0), vertices.get(vertices.size()-1));
+		}
+		for(int i = 1;i < vertices.size(); i++){
+			edges.addEdge(vertices.get(i-1), vertices.get(i));
+		}
+		
+	}
+	
+	public static ConvexPolytope2D newRandomPolytope(int numOfVertices){
 		if(numOfVertices <= 0){
 			throw new IllegalArgumentException("When constructing a convex polytope at least one vertice is required.");
 		}
+		return new ConvexPolytope2D(getRandomVertices(numOfVertices));
 	}
 	
 	/**
@@ -82,23 +82,82 @@ public class ConvexPolytope2D implements ConvexShape{
 		for(Point point : orderedPointSet){
 			vertices.add(point);
 		}
+		
+		return vertices;
 	}
 	
-	private class RandomEllipse{
-		private double xBound;
-		private double yBound;
-		
-		public RandomEllipse(){
-			//Set Max width and height
-			xBound = 1 + rdm.nextDouble()*(MAX_BOUND-1);//Ensure that x width is at least the size of 1
-			yBound = 1 + rdm.nextDouble()*(MAX_BOUND-1);
+
+	/*Returns an iterator of RealPoints[2] over the edge set*/
+	@Override
+	public Iterator<RealPoint[]> iterator() {
+		return edges.iterator();
+	}
+
+	@Override
+	public int getNumVertices() {
+		return vertices.size();
+	}
+
+	@Override
+	public boolean hasVertex(Point point) {
+		return vertices.contains(point);
+	}
+
+	@Override
+	public boolean hasEdgeBetween(Point p1, Point p2) {
+		updateHull();
+		return edges.containsEdge(p1, p2);
+	}
+
+	@Override
+	public boolean addVertex(Point point) {
+		if(vertices.contains(point)){
+			return false;
+		}else{
+			vertices.add(point);
+			isHullCurrent = false;
+			return true;
 		}
 		
-		public double[] getRandomPoint(){
-			double radians = Math.PI*2*rdm.nextDouble();
-			return new double[]{xBound*Math.cos(radians), yBound*Math.sin(radians)};
-		}
 		
+	}
+
+	@Override
+	public boolean removeVertex(Point point) {
+		if(vertices.remove(point)){
+			isHullCurrent = false;
+			return true;
+		}
+		return false;
+	}
+	
+	private void updateHull(){
+		if(!isHullCurrent){
+			edges = ConvexHull2D.getHull(vertices);
+			isHullCurrent = true;
+		}
+	}
+	
+	protected static int quadrant(Point point){
+		if(point.getAxisValue(0) == 0){ // edge case of (0,y)
+			return (point.getAxisValue(1) > 0)?(1):(3); // If y values is greater than zero, 1, otherwise 3
+		}else if(point.getAxisValue(1) == 0){//edge case of (0,x)
+			/* For consistency, (x,0) is considered to be in quadrant 4 as it is the previous quadrant assuming we arrived at
+			 * this point after some number of counter-clockwise revolutions*/
+			return (point.getAxisValue(0) > 0)?(4):(2);
+		}else if(point.getAxisValue(0) > 0){//none-edge case
+			if(point.getAxisValue(1) > 0){
+				return 1;
+			}else{
+				return 4;
+			}
+		}else{
+			if(point.getAxisValue(1) > 0){
+				return 2;
+			}else{
+				return 3;
+			}
+		}
 	}
 	
 	/*
@@ -137,4 +196,5 @@ public class ConvexPolytope2D implements ConvexShape{
 		return orderedPoints;
 		
 	}
+
 }

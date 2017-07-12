@@ -13,11 +13,12 @@ public class TestEdgeSet {
 	Point p3 = new Point((new double[]{1.0,1.0}));
 	Point[] p1p2 = {p1, p2}, p1p3 = {p1,p3}, p2p3 = {p2,p3};
 	Point[][] edgesInit = {p1p2, p1p3, p2p3};
-	EdgeSet edges;
+	EdgeSet edges, edges2;
 	
 	@Before
 	public void init(){
 		edges = new EdgeSet(edgesInit);
+		edges2 = new EdgeSet(edgesInit);
 	}
 
 	@Test
@@ -59,6 +60,16 @@ public class TestEdgeSet {
 		
 		assertFalse(edges.removeEdge(p3,p1));
 		
+	}
+	
+	@Test
+	public void testEquals(){
+		assertTrue(edges.equals(edges));
+		assertTrue(edges.equals(edges2));
+		edges2.removeEdge(p1, p2);
+		assertFalse(edges.equals(edges2));
+		edges2 = new EdgeSet(2);
+		assertFalse(edges.equals(edges2));
 	}
 
 }

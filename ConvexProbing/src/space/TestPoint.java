@@ -23,13 +23,14 @@ public class TestPoint {
 	@Before
 	public void Initialization(){
 		p1 = new Point(p1Init);
-		p1Copy = new Point(p1Init);
+		p1Copy = new Point(1,2,3);
 		p2 = new Point(p2Init);
 		p2Copy = new Point(p2Init);
 		equals();
 	}
 	
 	//Tested at each initialization and the end of each test, Points should be immutable
+	@Test
 	public void equals(){
 		assertTrue(p1.equals(p1));
 		assertTrue(p1.equals(p1Copy));
@@ -119,9 +120,22 @@ public class TestPoint {
 	}
 	
 	@Test
+	public void testSubtract(){
+		assertTrue(p1.subtract(p1).equals(ORIGIN));
+		assertTrue(p1.subtract(ONE).equals(new Point(0,1,2)));
+		assertTrue(ONE.subtract(p1).equals(new Point(0,-1,-2)));
+	}
+	
+	@Test
 	public void testGetUnitVector(){
-		System.out.println(p1.getUnitVector().getMagnitude());
+		//System.out.println(p1.getUnitVector().getMagnitude());
 		assertTrue(isClose(p1.getUnitVector().getMagnitude(), 1.0));
+		assertTrue(isClose(p2.getUnitVector().getMagnitude(), 1.0));
+		assertTrue(isClose(ONE.getUnitVector().getMagnitude(), 1.0));
+		try{
+			ORIGIN.getUnitVector().getMagnitude();
+			fail();
+		}catch(ArithmeticException e){}
 	}
 	
 }

@@ -5,7 +5,7 @@ import org.apache.commons.math3.fraction.BigFraction;
 
 public class Point implements RealPoint{
 	
-	private static final double INEQUALITY_THRESHOLD = 0.00000000000001;
+	private static final double INEQUALITY_THRESHOLD = 0.0000000000001;
 	
 	double[] vector;
 	
@@ -13,10 +13,7 @@ public class Point implements RealPoint{
 		if(point == null){
 			throw new NullPointerException("It does not make sense to have a point without any dimension");
 		}
-		vector = new double[point.length];
-		for(int i = 0; i < point.length; i++){
-			vector[i] = point[i];
-		}
+		vector = point;
 	}
 
 	/*
@@ -42,6 +39,15 @@ public class Point implements RealPoint{
 		}
 		return true;
 	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof Point)){
+			return false;
+		}else{
+			return this.equals((Point)obj);
+		}
+	}
 
 	/*
 	 * Returns the value of an axis
@@ -61,8 +67,18 @@ public class Point implements RealPoint{
 		return new Point(newPoint);
 	}
 
+	
 	public Point subtract(RealPoint p){
-		return add(p.scaleBy(-1));
+		return add(p.negate());
+	}
+	
+	
+	public Point negate(){
+		double[] newVector = new double[vector.length];
+		for(int i = 0; i < vector.length; i++){
+			newVector[i] = -vector[i];
+		}
+		return new Point(newVector);
 	}
 	
 	/*
@@ -97,16 +113,31 @@ public class Point implements RealPoint{
 	}
 	/*This method is broken by java rounding errors*/
 	public Point getUnitVector(){
+		double magnitude = this.getMagnitude();
+		if(magnitude == 0.0){
+			throw new ArithmeticException("Vector is the zero vector");
+		}
 		return this.scaleBy(1/this.getMagnitude());
+	}
+	
+	public boolean isZeroVector(){
+		for(double v : vector){
+			if(v != 0.0){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public String toString(){
 		StringBuilder builder = new StringBuilder(getDimension()*2 -1 + 2);
 		builder.append('[');
-		for(double value : vector){
-			builder.append(value + ", ");
+		for(int i = 0; i < vector.length; i++){
+			if(i != vector.length -1)
+				builder.append(vector[i] + ", ");
+			else
+				builder.append(vector[i] + "]");
 		}
-		builder.append(']');
 		return builder.toString();
 	}
 	
