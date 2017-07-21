@@ -1,7 +1,7 @@
 package space;
 
 import static java.lang.Math.PI;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -67,8 +67,13 @@ public class TetsConvexPolytope2D {
 
 	}
 	@Test
-	public void testAddVertex(){
+	public void testContainsPoint(){
+		ConvexPolytope2D ellipsePolytope = ConvexPolytope2D.newRandomPolytope(20);
 		
+		assertFalse(ellipsePolytope.containsPoint(new Point(201,201)));
+		Point dir = ellipsePolytope.vertices.get(1).subtract(ellipsePolytope.vertices.get(0));
+		Point pointInPolytope = ellipsePolytope.vertices.get(0).add(dir.scaleBy(0.5));
+		assertTrue(ellipsePolytope.containsPoint(pointInPolytope));
 	}
 
 }

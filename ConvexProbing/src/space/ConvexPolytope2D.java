@@ -9,19 +9,13 @@ public class ConvexPolytope2D implements ConvexShape{
 	
 	private static final double MINIMUM_POINT_DISTANCE = 0.0000001;
 	
-	private ArrayList<Point> vertices;
+	ArrayList<Point> vertices;
 	private EdgeSet edges;
-	private boolean isHullCurrent;
-	
-	public ConvexPolytope2D(){
-		
-	}
 	
 	//Create an uninitialized object
 	protected ConvexPolytope2D(ArrayList<Point> vertices){
 		this.vertices = vertices;
-		makeEdgeSet(vertices.size());
-		isHullCurrent = true;
+		edges = ConvexHull2D.getHull(vertices);
 	}
 	
 	/*Constructs the edge set of a ramdomly generated and ordered vertex set*/ 
@@ -105,38 +99,63 @@ public class ConvexPolytope2D implements ConvexShape{
 
 	@Override
 	public boolean hasEdgeBetween(Point p1, Point p2) {
-		updateHull();
 		return edges.containsEdge(p1, p2);
 	}
 
+	/**
+	 * @param point the point that you wish to add to the vertex set to alter the polytope's shape.
+	 * @return returns true if the hull of the polytope had to be altered to accommodate the new vertex; 
+	 * vertices are only added when the hull must be altered to accommodate them.
+	 */
 	@Override
 	public boolean addVertex(Point point) {
-		if(vertices.contains(point)){
+		//Check if the vertices is in the set
+		if(containsPoint(point)){
 			return false;
 		}else{
 			vertices.add(point);
-			isHullCurrent = false;
+			edges = ConvexHull2D.getHull(vertices);
 			return true;
 		}
-		
-		
+	}
+	
+	//True iff the point is contained in the set
+	public boolean containsPoint(Point point){
+		if(vertices.contains(point)){
+			return true;
+		}
+		if(vertices.size() > 1){//If singleton, vertices.contains would catch it
+			System.out.println("Entering");
+			Point direction = getUnitVectorFrom(point, vertices.get(0));
+			System.out.println("Init Dir: " + direction);
+			Point dirOfConsideration;
+			for(int i = 1; i < vertices.size(); i++){
+				dirOfConsideration = getUnitVectorFrom(point, vertices.get(i));
+				System.out.println(dirOfConsideration);
+				System.out.println(direction.dot(dirOfConsideration));
+				if(direction.dot(dirOfConsideration) <= 0){ //No convexcone with vertex point contains the polytope.
+					System.out.println("Exit because in set");
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	static Point getUnitVectorFrom(Point a, Point b){
+		return (b.subtract(a)).getUnitVector();
 	}
 
 	@Override
 	public boolean removeVertex(Point point) {
 		if(vertices.remove(point)){
-			isHullCurrent = false;
+			edges = ConvexHull2D.getHull(vertices);
 			return true;
 		}
 		return false;
 	}
 	
-	private void updateHull(){
-		if(!isHullCurrent){
-			edges = ConvexHull2D.getHull(vertices);
-			isHullCurrent = true;
-		}
-	}
+	
 	
 	protected static int quadrant(Point point){
 		if(point.getAxisValue(0) == 0){ // edge case of (0,y)
