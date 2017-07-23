@@ -64,6 +64,10 @@ public class TetsConvexPolytope2D {
 	@Test
 	public void TestContructorOfRandomConvexShape() {
 		ConvexPolytope2D shape = ConvexPolytope2D.newRandomPolytope(10);
+		for(RealPoint[] edge : shape.edges){
+			assertTrue(shape.vertices.contains(edge[0]));
+			assertTrue(shape.vertices.contains(edge[1]));
+		}
 
 	}
 	@Test

@@ -1,6 +1,7 @@
 package space;
 import java.util.ArrayList;
 
+//n^2 algorithm for 2D hulls
 class ConvexHull2D {
 	private static final double INEQUALITY_THRESHOLD = 0.00000000000001;
 	

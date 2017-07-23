@@ -10,12 +10,13 @@ public class ConvexPolytope2D implements ConvexShape{
 	private static final double MINIMUM_POINT_DISTANCE = 0.0000001;
 	
 	ArrayList<Point> vertices;
-	private EdgeSet edges;
+	EdgeSet edges;
 	
 	//Create an uninitialized object
-	protected ConvexPolytope2D(ArrayList<Point> vertices){
+	public ConvexPolytope2D(ArrayList<Point> vertices){
 		this.vertices = vertices;
-		edges = ConvexHull2D.getHull(vertices);
+		edges = GrahamScan.getHull(vertices);
+		vertices = parseVerticesFromEdgeSet(edges);
 	}
 	
 	/*Constructs the edge set of a ramdomly generated and ordered vertex set*/ 
@@ -96,6 +97,10 @@ public class ConvexPolytope2D implements ConvexShape{
 	public boolean hasVertex(Point point) {
 		return vertices.contains(point);
 	}
+	
+	public int getNumEdges(){
+		return edges.size();
+	}
 
 	@Override
 	public boolean hasEdgeBetween(Point p1, Point p2) {
@@ -119,22 +124,22 @@ public class ConvexPolytope2D implements ConvexShape{
 		}
 	}
 	
-	//True iff the point is contained in the set
+	//THIS IS BROKEN
 	public boolean containsPoint(Point point){
 		if(vertices.contains(point)){
 			return true;
 		}
 		if(vertices.size() > 1){//If singleton, vertices.contains would catch it
-			System.out.println("Entering");
+			//System.out.println("Entering");
 			Point direction = getUnitVectorFrom(point, vertices.get(0));
-			System.out.println("Init Dir: " + direction);
+			//System.out.println("Init Dir: " + direction);
 			Point dirOfConsideration;
 			for(int i = 1; i < vertices.size(); i++){
 				dirOfConsideration = getUnitVectorFrom(point, vertices.get(i));
-				System.out.println(dirOfConsideration);
-				System.out.println(direction.dot(dirOfConsideration));
+				//System.out.println(dirOfConsideration);
+				//System.out.println(direction.dot(dirOfConsideration));
 				if(direction.dot(dirOfConsideration) <= 0){ //No convexcone with vertex point contains the polytope.
-					System.out.println("Exit because in set");
+				//	System.out.println("Exit because in set");
 					return true;
 				}
 			}
@@ -214,6 +219,19 @@ public class ConvexPolytope2D implements ConvexShape{
 		Arrays.sort(orderedPoints, pointOrderer);
 		return orderedPoints;
 		
+	}
+	
+	public static ArrayList<Point> parseVerticesFromEdgeSet(EdgeSet edges){
+		ArrayList<Point> vertexSet = new ArrayList();
+		for(RealPoint[] edge : edges){
+			if(!vertexSet.contains((Point)(edge[0]))){
+				vertexSet.add((Point)edge[0]);
+			}
+			if(!vertexSet.contains((Point)(edge[1]))){
+				vertexSet.add((Point)edge[1]);
+			}
+		}
+		return vertexSet;
 	}
 
 }
