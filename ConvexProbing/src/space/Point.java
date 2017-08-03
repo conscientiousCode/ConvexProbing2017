@@ -5,7 +5,7 @@ import org.apache.commons.math3.fraction.BigFraction;
 
 public class Point implements RealPoint{
 	
-	private static final double INEQUALITY_THRESHOLD = 0.0000000000001;
+	private static final double INEQUALITY_THRESHOLD = 0.00000000000001;
 	
 	double[] vector;
 	

@@ -7,8 +7,8 @@ public class StandardDiviationForHull {
 	double totalSumOfEdgeRatios;
 	ArrayList<Double> edgeRatios;
 	
-	public StandardDiviationForHull(){
-		edgeRatios = new ArrayList(10000);
+	public StandardDiviationForHull(int numberOfDataPoints){
+		edgeRatios = new ArrayList(numberOfDataPoints);
 		totalSumOfEdgeRatios = 0;
 		mean = 0;
 	}
